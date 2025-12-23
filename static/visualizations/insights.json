@@ -1,0 +1,46 @@
+{
+  "top_features": [
+    {
+      "name": "Engine Size",
+      "importance": 0.4075310899355339,
+      "description": "Larger engines typically mean more power and performance, increasing value"
+    },
+    {
+      "name": "Curb Weight",
+      "importance": 0.36237200551744764,
+      "description": "Heavier vehicles often indicate luxury or larger size, commanding higher prices"
+    },
+    {
+      "name": "Highway Mpg",
+      "importance": 0.06824908205926493,
+      "description": "Better fuel efficiency can increase value, especially for economy cars"
+    },
+    {
+      "name": "Horsepower",
+      "importance": 0.03510621282059894,
+      "description": "Higher horsepower directly correlates with performance and price"
+    },
+    {
+      "name": "Width",
+      "importance": 0.016743793272186572,
+      "description": "Wider vehicles often indicate luxury or sports models"
+    }
+  ],
+  "price_stats": {
+    "mean": 13207.129353233831,
+    "median": 10595.0,
+    "min": 5118.0,
+    "max": 45400.0,
+    "std": 7868.7682123438
+  },
+  "correlations": {
+    "strongest_positive": {
+      "feature": "engine-size",
+      "value": 0.861752243685972
+    },
+    "strongest_negative": {
+      "feature": "engine-size",
+      "value": 0.861752243685972
+    }
+  }
+}

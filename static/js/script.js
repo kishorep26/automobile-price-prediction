@@ -1,19 +1,22 @@
 // DOM Elements
 const form = document.getElementById('prediction-form');
-const predictBtn = document.getElementById('predict-btn');
-const resultCard = document.getElementById('result-card');
-const resultContent = document.getElementById('result-content');
-const predictedPrice = document.getElementById('predicted-price');
-const confidenceFill = document.getElementById('confidence-fill');
-const confidenceValue = document.getElementById('confidence-value');
-const accuracyStat = document.getElementById('accuracy-stat');
-const trainAccuracy = document.getElementById('train-accuracy');
-const testAccuracy = document.getElementById('test-accuracy');
+const analyzeBtn = document.getElementById('analyze-btn');
+const resultStandby = document.getElementById('result-standby');
+const resultActive = document.getElementById('result-active');
+const priceValue = document.getElementById('price-value');
+const confidenceBar = document.getElementById('confidence-bar');
+const confidencePercent = document.getElementById('confidence-percent');
+const accuracyMeter = document.getElementById('accuracy-meter');
+const accuracyFill = document.getElementById('accuracy-fill');
+const trainStat = document.getElementById('train-stat');
+const testStat = document.getElementById('test-stat');
+const findingsGrid = document.getElementById('findings-grid');
 
-// Load model stats on page load
+// Load data on page load
 window.addEventListener('DOMContentLoaded', async () => {
     await loadModelStats();
     await loadOptions();
+    await loadInsights();
 });
 
 // Load model statistics
@@ -25,17 +28,21 @@ async function loadModelStats() {
         const testScore = (data.test_score * 100).toFixed(1);
         const trainScore = (data.train_score * 100).toFixed(1);
 
-        accuracyStat.textContent = `${testScore}%`;
-        trainAccuracy.textContent = `${trainScore}%`;
-        testAccuracy.textContent = `${testScore}%`;
+        // Animate accuracy meter
+        animateValue(accuracyMeter, 0, parseFloat(testScore), 2000, '%');
+        setTimeout(() => {
+            accuracyFill.style.width = `${testScore}%`;
+        }, 100);
 
-        // Animate the stats
-        animateValue(accuracyStat, 0, parseFloat(testScore), 1500, '%');
-        animateValue(trainAccuracy, 0, parseFloat(trainScore), 1500, '%');
-        animateValue(testAccuracy, 0, parseFloat(testScore), 1500, '%');
+        // Update quick stats
+        animateValue(trainStat, 0, parseFloat(trainScore), 1500, '%');
+        animateValue(testStat, 0, parseFloat(testScore), 1500, '%');
 
     } catch (error) {
         console.error('Error loading stats:', error);
+        accuracyMeter.textContent = 'N/A';
+        trainStat.textContent = 'N/A';
+        testStat.textContent = 'N/A';
     }
 }
 
@@ -45,7 +52,6 @@ async function loadOptions() {
         const response = await fetch('/api/options');
         const options = await response.json();
 
-        // Populate dropdowns
         populateSelect('make', options['make']);
         populateSelect('fuel_type', options['fuel-type']);
         populateSelect('aspiration', options['aspiration']);
@@ -59,10 +65,32 @@ async function loadOptions() {
     }
 }
 
+// Load insights from JSON
+async function loadInsights() {
+    try {
+        const response = await fetch('/static/visualizations/insights.json');
+        const insights = await response.json();
+
+        // Populate findings
+        insights.top_features.forEach(feature => {
+            const findingItem = document.createElement('div');
+            findingItem.className = 'finding-item';
+            findingItem.innerHTML = `
+                <div class="finding-name">${feature.name}</div>
+                <div class="finding-importance">Importance: ${(feature.importance * 100).toFixed(1)}%</div>
+                <div class="finding-desc">${feature.description}</div>
+            `;
+            findingsGrid.appendChild(findingItem);
+        });
+
+    } catch (error) {
+        console.error('Error loading insights:', error);
+    }
+}
+
 // Populate select element
 function populateSelect(elementId, options) {
     const select = document.getElementById(elementId);
-    const currentValue = select.value;
 
     // Clear existing options except the first one
     while (select.options.length > 1) {
@@ -73,15 +101,13 @@ function populateSelect(elementId, options) {
     options.forEach(option => {
         const optionElement = document.createElement('option');
         optionElement.value = option;
-        optionElement.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+        optionElement.textContent = option.toUpperCase();
         select.appendChild(optionElement);
     });
 
-    // Restore previous value if it exists
-    if (currentValue && options.includes(currentValue)) {
-        select.value = currentValue;
-    } else if (options.length > 0) {
-        select.selectedIndex = 1; // Select first actual option
+    // Select first option by default
+    if (options.length > 0) {
+        select.selectedIndex = 1;
     }
 }
 
@@ -90,11 +116,11 @@ form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // Show loading state
-    predictBtn.classList.add('loading');
-    predictBtn.disabled = true;
-    const btnText = predictBtn.querySelector('.btn-text');
+    analyzeBtn.classList.add('loading');
+    analyzeBtn.disabled = true;
+    const btnText = analyzeBtn.querySelector('.btn-text');
     const originalText = btnText.textContent;
-    btnText.textContent = 'Predicting...';
+    btnText.textContent = 'ANALYZING...';
 
     try {
         // Gather form data
@@ -127,51 +153,48 @@ form.addEventListener('submit', async (e) => {
         showError('Failed to connect to the server');
     } finally {
         // Reset button state
-        predictBtn.classList.remove('loading');
-        predictBtn.disabled = false;
+        analyzeBtn.classList.remove('loading');
+        analyzeBtn.disabled = false;
         btnText.textContent = originalText;
     }
 });
 
 // Display prediction result
 function displayResult(price) {
-    // Hide placeholder, show result
-    const placeholder = resultCard.querySelector('.result-placeholder');
-    placeholder.style.display = 'none';
-    resultContent.style.display = 'block';
+    // Hide standby, show result
+    resultStandby.style.display = 'none';
+    resultActive.style.display = 'block';
 
     // Animate price
-    animateValue(predictedPrice, 0, price, 1000, '', true);
+    animateValue(priceValue, 0, price, 1500, '', true);
 
     // Set confidence (based on model accuracy)
-    const confidence = 85; // You can calculate this based on model stats
-    confidenceFill.style.width = `${confidence}%`;
-    confidenceValue.textContent = `${confidence}%`;
+    const confidence = 93; // From model test accuracy
+    setTimeout(() => {
+        confidenceBar.style.width = `${confidence}%`;
+        confidencePercent.textContent = `${confidence}%`;
+    }, 500);
 
     // Scroll to result
-    resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    document.getElementById('result-display').scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+    });
+}
 
-    // Add success animation
-    resultCard.style.animation = 'none';
-    setTimeout(() => {
-        resultCard.style.animation = 'priceReveal 0.6s ease-out';
-    }, 10);
+// Reset analysis
+function resetAnalysis() {
+    resultStandby.style.display = 'block';
+    resultActive.style.display = 'none';
+    confidenceBar.style.width = '0%';
+
+    // Scroll to form
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Show error message
 function showError(message) {
-    alert(`Error: ${message}`);
-}
-
-// Reset form
-function resetForm() {
-    form.reset();
-    const placeholder = resultCard.querySelector('.result-placeholder');
-    placeholder.style.display = 'block';
-    resultContent.style.display = 'none';
-
-    // Scroll to form
-    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    alert(`ERROR: ${message}`);
 }
 
 // Animate number value
@@ -225,39 +248,27 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Add input validation and formatting
+// Add input effects
 document.querySelectorAll('input[type="number"]').forEach(input => {
-    input.addEventListener('input', function () {
-        // Remove invalid characters
-        this.value = this.value.replace(/[^0-9.]/g, '');
-
-        // Ensure only one decimal point
-        const parts = this.value.split('.');
-        if (parts.length > 2) {
-            this.value = parts[0] + '.' + parts.slice(1).join('');
-        }
-    });
-
-    // Add focus effect
     input.addEventListener('focus', function () {
-        this.parentElement.style.transform = 'scale(1.02)';
+        this.parentElement.style.transform = 'translateX(3px)';
         this.parentElement.style.transition = 'transform 0.2s ease';
     });
 
     input.addEventListener('blur', function () {
-        this.parentElement.style.transform = 'scale(1)';
+        this.parentElement.style.transform = 'translateX(0)';
     });
 });
 
-// Add hover effects to form sections
-document.querySelectorAll('.form-section').forEach(section => {
-    section.addEventListener('mouseenter', function () {
-        this.style.transition = 'all 0.3s ease';
-        this.style.transform = 'translateX(5px)';
+// Add select effects
+document.querySelectorAll('select').forEach(select => {
+    select.addEventListener('focus', function () {
+        this.parentElement.style.transform = 'translateX(3px)';
+        this.parentElement.style.transition = 'transform 0.2s ease';
     });
 
-    section.addEventListener('mouseleave', function () {
-        this.style.transform = 'translateX(0)';
+    select.addEventListener('blur', function () {
+        this.parentElement.style.transform = 'translateX(0)';
     });
 });
 
@@ -268,9 +279,9 @@ window.addEventListener('scroll', () => {
     if (!ticking) {
         window.requestAnimationFrame(() => {
             const scrolled = window.pageYOffset;
-            const bgGradient = document.querySelector('.bg-gradient');
-            if (bgGradient) {
-                bgGradient.style.transform = `translateY(${scrolled * 0.5}px)`;
+            const speedometerBg = document.querySelector('.speedometer-bg');
+            if (speedometerBg) {
+                speedometerBg.style.transform = `translate(-50%, -50%) rotate(${scrolled * 0.05}deg)`;
             }
             ticking = false;
         });
@@ -278,47 +289,5 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Add loading skeleton for stats
-function showStatsSkeleton() {
-    accuracyStat.textContent = '--';
-    trainAccuracy.textContent = '--';
-    testAccuracy.textContent = '--';
-}
-
 // Initialize
-showStatsSkeleton();
-
-// Add form auto-save to localStorage (optional enhancement)
-const STORAGE_KEY = 'automobile_prediction_form';
-
-function saveFormData() {
-    const formData = new FormData(form);
-    const data = {};
-    formData.forEach((value, key) => {
-        data[key] = value;
-    });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-function loadFormData() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-        try {
-            const data = JSON.parse(saved);
-            Object.keys(data).forEach(key => {
-                const element = form.elements[key];
-                if (element) {
-                    element.value = data[key];
-                }
-            });
-        } catch (error) {
-            console.error('Error loading saved form data:', error);
-        }
-    }
-}
-
-// Auto-save form data on change
-form.addEventListener('change', saveFormData);
-
-// Load saved form data on page load (optional - commented out by default)
-// loadFormData();
+console.log('AutoValuate Pro - ML Model Initialized');
