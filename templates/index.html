@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automobile Price Prediction - AI-Powered Car Valuation</title>
+    <meta name="description" content="Predict automobile prices using advanced machine learning algorithms. Get accurate car valuations based on specifications and features.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="8" fill="url(#logo-gradient)"/>
+                        <path d="M12 20L18 14L24 20L30 14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 26L18 20L24 26L30 20" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="0" y1="0" x2="40" y2="40">
+                                <stop offset="0%" stop-color="#667eea"/>
+                                <stop offset="100%" stop-color="#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <h1>AutoPredict AI</h1>
+                </div>
+                <nav class="nav">
+                    <a href="#predictor" class="nav-link">Predictor</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#stats" class="nav-link">Model Stats</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span>Powered by Machine Learning</span>
+                </div>
+                <h2 class="hero-title">Predict Automobile Prices with <span class="gradient-text">AI Precision</span></h2>
+                <p class="hero-description">
+                    Leverage advanced Random Forest algorithms to get accurate price predictions for any automobile. 
+                    Simply input the vehicle specifications and get instant results.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="accuracy-stat">--</div>
+                        <div class="stat-label">Model Accuracy</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">205</div>
+                        <div class="stat-label">Training Samples</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">25+</div>
+                        <div class="stat-label">Features Analyzed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Predictor Section -->
+    <section id="predictor" class="predictor-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Price Predictor</h2>
+                <p class="section-description">Enter vehicle specifications to get an instant price prediction</p>
+            </div>
+
+            <div class="predictor-grid">
+                <!-- Form -->
+                <div class="form-container">
+                    <form id="prediction-form">
+                        <!-- Vehicle Information -->
+                        <div class="form-section">
+                            <h3 class="form-section-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                                </svg>
+                                Vehicle Information
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="make">Make</label>
+                                    <select id="make" name="make" required>
+                                        <option value="">Select make...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="body_style">Body Style</label>
+                                    <select id="body_style" name="body_style" required>
+                                        <option value="">Select style...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fuel_type">Fuel Type</label>
+                                    <select id="fuel_type" name="fuel_type" required>
+                                        <option value="">Select fuel...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="num_of_doors">Number of Doors</label>
+                                    <select id="num_of_doors" name="num_of_doors" required>
+                                        <option value="2">2 Doors</option>
+                                        <option value="4" selected>4 Doors</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Engine Specifications -->
+                        <div class="form-section">
+                            <h3 class="form-section-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                                Engine Specifications
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="engine_size">Engine Size (cc)</label>
+                                    <input type="number" id="engine_size" name="engine_size" value="127" min="50" max="400" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="num_of_cylinders">Cylinders</label>
+                                    <select id="num_of_cylinders" name="num_of_cylinders" required>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4" selected>4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="8">8</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="horsepower">Horsepower</label>
+                                    <input type="number" id="horsepower" name="horsepower" value="104" min="40" max="400" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="engine_type">Engine Type</label>
+                                    <select id="engine_type" name="engine_type" required>
+                                        <option value="">Select type...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fuel_system">Fuel System</label>
+                                    <select id="fuel_system" name="fuel_system" required>
+                                        <option value="">Select system...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="aspiration">Aspiration</label>
+                                    <select id="aspiration" name="aspiration" required>
+                                        <option value="">Select aspiration...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Physical Dimensions -->
+                        <div class="form-section">
+                            <h3 class="form-section-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                    <path d="M3 9h18M9 21V9"/>
+                                </svg>
+                                Physical Dimensions
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="length">Length (inches)</label>
+                                    <input type="number" id="length" name="length" value="174" min="140" max="210" step="0.1" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="width">Width (inches)</label>
+                                    <input type="number" id="width" name="width" value="65.9" min="60" max="75" step="0.1" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="height">Height (inches)</label>
+                                    <input type="number" id="height" name="height" value="53.7" min="45" max="65" step="0.1" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="wheel_base">Wheel Base (inches)</label>
+                                    <input type="number" id="wheel_base" name="wheel_base" value="98.8" min="85" max="125" step="0.1" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="curb_weight">Curb Weight (lbs)</label>
+                                    <input type="number" id="curb_weight" name="curb_weight" value="2555" min="1400" max="4500" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="drive_wheels">Drive Wheels</label>
+                                    <select id="drive_wheels" name="drive_wheels" required>
+                                        <option value="">Select drive...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Performance & Efficiency -->
+                        <div class="form-section">
+                            <h3 class="form-section-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                </svg>
+                                Performance & Efficiency
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="city_mpg">City MPG</label>
+                                    <input type="number" id="city_mpg" name="city_mpg" value="25" min="10" max="60" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="highway_mpg">Highway MPG</label>
+                                    <input type="number" id="highway_mpg" name="highway_mpg" value="31" min="15" max="70" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="compression_ratio">Compression Ratio</label>
+                                    <input type="number" id="compression_ratio" name="compression_ratio" value="10.0" min="7" max="25" step="0.1" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="peak_rpm">Peak RPM</label>
+                                    <input type="number" id="peak_rpm" name="peak_rpm" value="5125" min="4000" max="7000" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="predict-btn">
+                            <span class="btn-text">Predict Price</span>
+                            <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Results -->
+                <div class="results-container">
+                    <div class="result-card" id="result-card">
+                        <div class="result-placeholder">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                            <h3>Ready to Predict</h3>
+                            <p>Fill in the vehicle details and click "Predict Price" to get an instant valuation</p>
+                        </div>
+
+                        <div class="result-content" id="result-content" style="display: none;">
+                            <div class="result-header">
+                                <h3>Predicted Price</h3>
+                                <div class="result-badge">AI Powered</div>
+                            </div>
+                            
+                            <div class="price-display">
+                                <span class="currency">$</span>
+                                <span class="price" id="predicted-price">0</span>
+                            </div>
+
+                            <div class="confidence-bar">
+                                <div class="confidence-label">
+                                    <span>Confidence Level</span>
+                                    <span id="confidence-value">--</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="confidence-fill"></div>
+                                </div>
+                            </div>
+
+                            <div class="result-info">
+                                <div class="info-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 16v-4M12 8h.01"/>
+                                    </svg>
+                                    <span>Based on Random Forest ML model</span>
+                                </div>
+                                <div class="info-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                    </svg>
+                                    <span>Trained on 205 automobile samples</span>
+                                </div>
+                            </div>
+
+                            <button class="btn-secondary" onclick="resetForm()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                                    <path d="M21 3v5h-5"/>
+                                </svg>
+                                New Prediction
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Model Stats Card -->
+                    <div class="stats-card" id="stats">
+                        <h3>Model Performance</h3>
+                        <div class="stat-row">
+                            <span>Training Accuracy</span>
+                            <span class="stat-value-sm" id="train-accuracy">--</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Testing Accuracy</span>
+                            <span class="stat-value-sm" id="test-accuracy">--</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Algorithm</span>
+                            <span class="stat-value-sm">Random Forest</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <h2 class="section-title">About This Project</h2>
+                    <p class="about-text">
+                        This automobile price prediction system uses advanced machine learning algorithms to provide 
+                        accurate price estimates based on vehicle specifications. The model is trained on a comprehensive 
+                        dataset of 205 automobiles with 26 different features.
+                    </p>
+                    <p class="about-text">
+                        Using Random Forest regression, the system analyzes multiple factors including engine specifications, 
+                        physical dimensions, fuel efficiency, and performance metrics to generate reliable price predictions.
+                    </p>
+                    
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon">🎯</div>
+                            <h4>High Accuracy</h4>
+                            <p>Advanced ML algorithms ensure precise predictions</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">⚡</div>
+                            <h4>Instant Results</h4>
+                            <p>Get price predictions in milliseconds</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">📊</div>
+                            <h4>Data-Driven</h4>
+                            <p>Based on real automobile market data</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🔒</div>
+                            <h4>Reliable</h4>
+                            <p>Consistent and validated predictions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 AutoPredict AI. Built with Machine Learning.</p>
+                <div class="footer-links">
+                    <a href="https://github.com/kishorep26/automobile-price-prediction" target="_blank">GitHub</a>
+                    <span>•</span>
+                    <a href="#about">About</a>
+                    <span>•</span>
+                    <a href="#stats">Stats</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
