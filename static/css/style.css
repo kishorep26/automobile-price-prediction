@@ -775,6 +775,14 @@ body {
     grid-column: 1 / -1;
 }
 
+.analytics-card img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    display: block;
+}
+
 .findings-panel {
     background: var(--bg-panel);
     border: 1px solid var(--border);
