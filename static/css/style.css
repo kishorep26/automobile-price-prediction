@@ -5,22 +5,22 @@
 }
 
 :root {
-    --primary: #00ff88;
-    --primary-glow: rgba(0, 255, 136, 0.5);
-    --secondary: #00d9ff;
-    --accent: #ff0055;
+    --primary: #6366f1;
+    --primary-glow: rgba(99, 102, 241, 0.25);
+    --secondary: #8b5cf6;
+    --accent: #ec4899;
 
-    --bg-dark: #0a0a0a;
-    --bg-panel: #111111;
-    --bg-card: #1a1a1a;
-    --bg-input: #0f0f0f;
+    --bg-dark: #0f0f1a;
+    --bg-panel: #1a1a2e;
+    --bg-card: #16213e;
+    --bg-input: #0f172a;
 
-    --text-primary: #ffffff;
-    --text-secondary: #a0a0a0;
-    --text-muted: #606060;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
 
-    --border: #222222;
-    --border-glow: rgba(0, 255, 136, 0.3);
+    --border: #1e293b;
+    --border-glow: rgba(99, 102, 241, 0.15);
 
     --font-display: 'Orbitron', monospace;
     --font-body: 'Rajdhani', sans-serif;
@@ -42,7 +42,7 @@ body {
     transform: translate(-50%, -50%);
     width: 150vw;
     height: 150vw;
-    background: radial-gradient(circle, rgba(0, 255, 136, 0.03) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.02) 0%, transparent 70%);
     animation: rotate 60s linear infinite;
     pointer-events: none;
     z-index: 0;
@@ -68,8 +68,8 @@ body {
         repeating-linear-gradient(90deg,
             transparent,
             transparent 100px,
-            rgba(0, 255, 136, 0.02) 100px,
-            rgba(0, 255, 136, 0.02) 101px);
+            rgba(99, 102, 241, 0.015) 100px,
+            rgba(99, 102, 241, 0.015) 101px);
     pointer-events: none;
     z-index: 0;
 }
@@ -180,7 +180,7 @@ body {
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1.5rem;
-    background: rgba(0, 255, 136, 0.1);
+    background: rgba(99, 102, 241, 0.08);
     border: 1px solid var(--primary);
     font-family: var(--font-display);
     font-size: 0.75rem;
@@ -198,7 +198,7 @@ body {
     }
 
     50% {
-        border-color: rgba(0, 255, 136, 0.5);
+        border-color: rgba(99, 102, 241, 0.4);
         box-shadow: 0 0 20px var(--primary-glow);
     }
 }
@@ -566,7 +566,7 @@ body {
 .price-readout {
     text-align: center;
     padding: 2rem;
-    background: rgba(0, 255, 136, 0.05);
+    background: rgba(99, 102, 241, 0.04);
     border: 1px solid var(--primary);
     margin-bottom: 2rem;
 }
