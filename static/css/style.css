@@ -22,8 +22,8 @@
     --border: #1e293b;
     --border-glow: rgba(99, 102, 241, 0.15);
 
-    --font-display: 'Orbitron', monospace;
-    --font-body: 'Rajdhani', sans-serif;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
 }
 
 body {
